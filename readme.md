@@ -6,6 +6,16 @@ This project is the result of the following course: https://www.youtube.com/play
 It currently contains no additional code that I added myself. If that should change, I will update this section with the commit hash of the commit that represents the project at the end of the course, so it can be compared to the current state of the project.
 
 ## How to run (in dev/debug mode)
+* Register a Spotify Developer account and get Client ID and Client Secret
+* Create a new Application in the Spotify Developer Dashboard
+* Add `<site url>/spotify/redirect` to Redirect URIs of the Application in the Spotify Developer Dashboard
+  * for development, `<site url>` is `http://127.0.0.1:8000`
+* create spotify/credentials.py (TODO: move this process to environment variables - but for now this file is included in .gitignore)
+```python
+CLIENT_ID = "<spotify client id>"
+CLIENT_SECRET = "<spotify client secret>"
+REDIRECT_URI = "http://127.0.0.1:8000/spotify/redirect" # for testing - replace with real URL in prod
+```
 * in project root (same folder as manage.py): `python manage.py runserver`
 * in /frontend: `npm run dev`
 * access the app at 127.0.0.1
