@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from .credentials import REDIRECT_URI, CLIENT_ID, CLIENT_SECRET
 from .utils import *
 from api.models import Room
+from .models import Vote
 
 
 # Request authorization to access data
@@ -36,8 +37,6 @@ def spotify_callback(request, format=None):
         'client_id': CLIENT_ID,
         'client_secret': CLIENT_SECRET,
     }).json()
-
-    print(f"response: {response}")
 
     # get information from response
     access_token = response.get('access_token')
@@ -85,13 +84,15 @@ class CurrentSong(APIView):
         is_playing = response.get('is_playing')
         song_id = item.get('id')
 
+
         artist_string = ""
-        print(item.get('artist'))
         for i, artist in enumerate(item.get('artists')):
             if i > 0:
                 artist_string += ", "
             name = artist.get('name')
             artist_string += name
+
+        votes = len(Vote.objects.filter(room=room, song_id=song_id))
 
         song = {
             'title': item.get('name'),
@@ -100,11 +101,21 @@ class CurrentSong(APIView):
             'time': progress,
             'image_url': album_cover,
             'is_playing': is_playing,
-            'votes': 0, # votes to skip
+            'votes': votes, # number of time people have clicked skip on this song
+            'votes_required': room.votes_to_skip,
             'id': song_id,
         }
 
+        self.update_room_song(room, song_id)
+
         return Response(song, status=status.HTTP_200_OK)
+
+    def update_room_song(self, room, song_id):
+        current_song = room.current_song
+        if current_song != song_id: # song changed
+            room.current_song = song_id
+            room.save(update_fields=['current_song'])
+            votes = Vote.objects.filter(room=room).delete() # reset votes to 0
 
 
 class PauseSong(APIView):
@@ -139,11 +150,26 @@ class SkipSong(APIView):
         # TODO: also that the room exists
         room_code = self.request.session.get('room_code')
         room = Room.objects.filter(code=room_code)[0]
+        votes = Vote.objects.filter(room=room, song_id=room.current_song)
+        votes_needed = room.votes_to_skip
 
-        # if the user is the host, skip the song
         if self.request.session.session_key == room.host:
+            votes.delete()
             skip_song(room.host)
         else:
-            pass
+            user_votes = Vote.objects.filter(user=self.request.session.session_key, room=room, song_id=room.current_song)
+            for item in user_votes:
+                print(item.__dict__)
+            print(len(user_votes))
+            if len(user_votes) == 0:
+                if len(votes) + 1 >= votes_needed:
+                    votes.delete()
+                    skip_song(room.host)
+                else:
+                    vote = Vote(user=self.request.session.session_key, room=room, song_id=room.current_song)
+                    vote.save()
+            else:
+                Vote.objects.filter(user=self.request.session.session_key, room=room).delete()
+
 
         return Response({}, status.HTTP_204_NO_CONTENT)
