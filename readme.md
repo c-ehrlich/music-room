@@ -10,12 +10,18 @@ It currently contains no additional code that I added myself. If that should cha
 * Create a new Application in the Spotify Developer Dashboard
 * Add `<site url>/spotify/redirect` to Redirect URIs of the Application in the Spotify Developer Dashboard
   * for development, `<site url>` is `http://127.0.0.1:8000`
-* create spotify/credentials.py (TODO: move this process to environment variables - but for now this file is included in .gitignore)
+* create spotify/credentials.py (TODO: move this process to environment variables)
 ```python
 CLIENT_ID = "<spotify client id>"
 CLIENT_SECRET = "<spotify client secret>"
 REDIRECT_URI = "http://127.0.0.1:8000/spotify/redirect" # for testing - replace with real URL in prod
 ```
-* in project root (same folder as manage.py): `python manage.py runserver`
-* in /frontend: `npm run dev`
-* access the app at 127.0.0.1
+* in project root (same folder as manage.py):
+  * add `spotify/credentials.py` to .gitignore
+  * (recommended: set up a venv)
+  * `pip install -r requirements.txt`
+  * `python manage.py runserver`
+* in /frontend:
+  * `npm i` to install all dependencies
+  * `npm run dev`
+* access the app (in debug mode) at 127.0.0.1:8000
