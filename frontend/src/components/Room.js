@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Button, Typography } from '@material-ui/core';
 import CreateRoomPage from './CreateRoomPage';
+import MusicPlayer from './MusicPlayer';
 
 export default class Room extends Component {
   constructor(props) {
@@ -11,6 +12,7 @@ export default class Room extends Component {
       isHost: false,
       showSettings: false,
       spotifyAuthenticated: false,
+      // song: {},
     };
     this.roomCode = this.props.match.params.roomCode;
     this.leaveButtonPressed = this.leaveButtonPressed.bind(this);
@@ -19,17 +21,29 @@ export default class Room extends Component {
     this.renderSettings = this.renderSettings.bind(this);
     this.getRoomDetails = this.getRoomDetails.bind(this);
     this.authenticateSpotify = this.authenticateSpotify.bind(this);
+    this.getCurrentSong = this.getCurrentSong.bind(this);
     this.getRoomDetails();
   }
 
+  componentDidMount() {
+    this.interval = setInterval(this.getCurrentSong, 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
   getRoomDetails() {
+    console.log("in getRoomDetails");
     fetch('/api/get-room' + '?code=' + this.roomCode)
     .then((response) => {
       if (!response.ok) {
+        console.log("getRoomDetails ... response not ok");
         // leave room
         this.props.leaveRoomCallback();
         this.props.history.push('/');
       }
+      console.log("getRoomDetails ... response was ok");
       return response.json()
     })
     .then((data) => {
@@ -39,12 +53,14 @@ export default class Room extends Component {
         isHost: data.is_host,
       });
       if (this.state.isHost) {
+        console.log("in getRoomDetails ... about to authenticate Spotify");
         this.authenticateSpotify();
       }
     });
   }
 
   authenticateSpotify() {
+    console.log("in authenticateSpotify");
     fetch('/spotify/is-authenticated')
     .then((response) => response.json())
     .then((data) => {
@@ -59,6 +75,21 @@ export default class Room extends Component {
         });
       }
     });
+  }
+
+  getCurrentSong() {
+    fetch('/spotify/current-song')
+    .then(response => {
+      if (!response.ok) {
+        return {};
+      } else {
+        return response.json();
+      }
+    })
+    .then(data => {
+      this.setState({song: data});
+      console.log(data);
+    })
   }
 
   leaveButtonPressed() {
@@ -131,21 +162,7 @@ export default class Room extends Component {
             Code: {this.roomCode}
           </Typography>
         </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h6" component="h4">
-            Votes: {this.state.votesToSkip}
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h6" component="h4">
-            Guest Can Pause: {this.state.guestCanPause.toString()}
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h6" component="h4">
-            Host: {this.state.isHost.toString()}
-          </Typography>
-        </Grid>
+        <MusicPlayer {...this.state.song} />
         {this.state.isHost ? this.renderSettingsButton() : null}
         <Grid item xs={12}>
           <Button variant="contained" color="secondary" onClick={ this.leaveButtonPressed }>
