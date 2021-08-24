@@ -28,6 +28,15 @@ export default class MusicPlayer extends Component {
     // TODO: add error handling for if the user doesn't have permissions
   }
 
+  skipSong() {
+    const requestOptions = {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+    };
+    fetch('/spotify/skip', requestOptions);
+    // TODO: add error handling for if the user doesn't have permissions
+  }
+
   render() {
     const songProgress = (this.props.time / this.props.duration) * 100;
 
@@ -53,7 +62,9 @@ export default class MusicPlayer extends Component {
                 {this.props.is_playing ? <PauseIcon /> : <PlayArrowIcon />}
               </IconButton>
               <IconButton>
-                <SkipNextIcon />
+                <SkipNextIcon
+                  onClick={() => this.skipSong()}
+                />
               </IconButton>
             </div>
           </Grid>
