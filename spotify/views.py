@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from .credentials import REDIRECT_URI, CLIENT_ID, CLIENT_SECRET
-from .util import *
+from .utils import *
 from api.models import Room
 
 
@@ -105,3 +105,29 @@ class CurrentSong(APIView):
         }
 
         return Response(song, status=status.HTTP_200_OK)
+
+
+class PauseSong(APIView):
+    def put(self, response, format=None):
+        # does the user have permission to pause or play?
+        # true if either user is host, or guests have permission to pause
+        room_code = self.request.session.get('room_code')
+        room = Room.objects.filter(code=room_code)[0]
+        if self.request.session.session_key == room.host or room.guest_can_pause:
+            pause_song(room.host)
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        return Response({}, status=status.HTTP_403_FORBIDDEN)
+
+
+class PlaySong(APIView):
+    def put(self, response, format=None):
+        # does the user have permission to pause or play?
+        # true if either user is host, or guests have permission to pause
+        room_code = self.request.session.get('room_code')
+        room = Room.objects.filter(code=room_code)[0]
+        if self.request.session.session_key == room.host or room.guest_can_pause:
+            play_song(room.host)
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        return Response({}, status=status.HTTP_403_FORBIDDEN)

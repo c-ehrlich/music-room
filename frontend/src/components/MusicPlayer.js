@@ -7,6 +7,25 @@ import SkipNextIcon from "@material-ui/icons/SkipNext";
 export default class MusicPlayer extends Component {
   constructor(props) {
     super(props);
+    // TODO: put default song information in state - so that the player isn't broken when no song is playing
+  }
+
+  pauseSong() {
+    const requestOptions = {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+    };
+    fetch('/spotify/pause', requestOptions);
+    // TODO: add error handling for if the user doesn't have permissions
+  }
+
+  playSong() {
+    const requestOptions = {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+    };
+    fetch('/spotify/play', requestOptions);
+    // TODO: add error handling for if the user doesn't have permissions
   }
 
   render() {
@@ -26,7 +45,11 @@ export default class MusicPlayer extends Component {
               {this.props.artist}
             </Typography>
             <div>
-              <IconButton>
+              <IconButton
+                onClick={() => {
+                  this.props.is_playing ? this.pauseSong() : this.playSong();
+                }}
+              >
                 {this.props.is_playing ? <PauseIcon /> : <PlayArrowIcon />}
               </IconButton>
               <IconButton>
