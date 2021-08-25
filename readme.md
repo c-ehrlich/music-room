@@ -5,8 +5,6 @@
 ## About
 Music-Room is a shared Spotify instance that allows one user to host a room in which music is playing, and other users to vote to skip songs, and optionally pause the currently playing song.
 
-A significant percentage of the code was created by me - this project is based on the following course: https://www.youtube.com/playlist?list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j
-
 ## How to run (in dev/debug mode)
 * Register a Spotify Developer account and get Client ID and Client Secret
 * Create a new Application in the Spotify Developer Dashboard
@@ -32,3 +30,6 @@ REDIRECT_URI = "http://127.0.0.1:8000/spotify/redirect" # for testing - replace 
 ![Music-Room Screenshot 2](https://i.imgur.com/ZlwhyA6.png)
 ![Music-Room Screenshot 3](https://i.imgur.com/rkMwrvc.png)
 ![Music-Room Screenshot 4](https://i.imgur.com/5N3CWgy.png)
+
+## Notes
+A significant percentage of the code was not created by me - this project is based on the following course: https://www.youtube.com/playlist?list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j
