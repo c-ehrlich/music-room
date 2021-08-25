@@ -1,11 +1,11 @@
-# Music-Controller
+# Music-Room
 
 ![Music-Room Screenshot 1](https://i.imgur.com/HbdZ9ah.png)
 
 ## About
-Music-Room is a shared Spotify instance that allows one user to host a room in which music is playing, and other users to vote to skip songs, and optionally pause the currently playing song. 
+Music-Room is a shared Spotify instance that allows one user to host a room in which music is playing, and other users to vote to skip songs, and optionally pause the currently playing song.
 
-This project is based on the following course: https://www.youtube.com/playlist?list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j
+A significant percentage of the code was created by me - this project is based on the following course: https://www.youtube.com/playlist?list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j
 
 ## How to run (in dev/debug mode)
 * Register a Spotify Developer account and get Client ID and Client Secret
