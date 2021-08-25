@@ -1,9 +1,11 @@
 # Music-Controller
 
-## About
-This project is the result of the following course: https://www.youtube.com/playlist?list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j
+![Music-Room Screenshot 1](https://i.imgur.com/HbdZ9ah.png)
 
-It currently contains no additional code that I added myself. If that should change, I will update this section with the commit hash of the commit that represents the project at the end of the course, so it can be compared to the current state of the project.
+## About
+Music-Room is a shared Spotify instance that allows one user to host a room in which music is playing, and other users to vote to skip songs, and optionally pause the currently playing song. 
+
+This project is based on the following course: https://www.youtube.com/playlist?list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j
 
 ## How to run (in dev/debug mode)
 * Register a Spotify Developer account and get Client ID and Client Secret
@@ -25,3 +27,8 @@ REDIRECT_URI = "http://127.0.0.1:8000/spotify/redirect" # for testing - replace 
   * `npm i` to install all dependencies
   * `npm run dev`
 * access the app (in debug mode) at 127.0.0.1:8000
+
+## Additional Screenshots
+![Music-Room Screenshot 2](https://i.imgur.com/ZlwhyA6.png)
+![Music-Room Screenshot 3](https://i.imgur.com/rkMwrvc.png)
+![Music-Room Screenshot 4](https://i.imgur.com/5N3CWgy.png)
